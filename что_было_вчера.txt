@@ -1,0 +1,16 @@
+1) идем на гитхаб, создаем репозиторий
+2) копируем урл репозитория
+3) в проводнике написать CMD, вызывается командная строка
+4) git clone <урл_репозитория>
+5) в командной строке выполняем команду npm init и нажимаем enter, enter, enter
+6) npm init создает package.json файл, который нужен для NodeJs
+7) NodeJs позволяет запускать Javascript на локальной машине (вне браузера)
+8) Устанавливаем зависимость browser-sync (веб-сервер для локальной разработки)
+9) npm install browser-sync в папке с проектом
+10) после установки browser-sync добавляем в package.json в секцию scritpts "start": "browser-sync start --server"
+11) теперь нужно создать .gitignore (этот файл скрывает от git некоторые папки или файлы)
+12) в .gitignore добавляем /node_modules + /package-lock.json
+13) делаем git add .
+14) деалем git commit -m"имя_коммита"
+15) пушим командой git push origin master
+16) в настройках репозитория, в секции github pages выбираем source branch master

@@ -5,9 +5,11 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+
   <link href="style.css" rel="stylesheet" />
   <link href="https://fonts.googleapis.com/css2?family=Pangolin&display=swap" rel="stylesheet">
-  <title>Document</title>
+
+  <title>ROCK TEST | Пройди крутой тест и докажи что ты настоящий рокер!</title>
 </head>
 
 <body>
@@ -25,47 +27,41 @@
     <div id="answer_buttons" class="asks_part">
       <!-- data-* аттрибуты позволяют прокидывать значения из верстки в JS -->
       <!-- Это нужно чтобы мы связывали нам объект с вопросами с элементами интерфейса -->
-      <button disabled class="hidden" data-question="a">Показать 1 вопрос</button>
-      <button disabled class="hidden" data-question="b">Показать 2 вопрос</button>
-      <button disabled class="hidden" data-question="c">Показать 3 вопрос</button>
-      <button disabled class="hidden" data-question="d">Показать 4 вопрос</button>
+      <button class="hidden" data-question="a">Показать 1 вопрос</button>
+      <button class="hidden" data-question="b">Показать 2 вопрос</button>
+      <button class="hidden" data-question="c">Показать 3 вопрос</button>
+      <button class="hidden" data-question="d">Показать 4 вопрос</button>
     </div>
   </div>
 </body>
 
 <script>
-
- //Массив со статусами
- //Массив со статусами
-  const statusArray = [
-    {
+  // массив со статусами
+  const statusHashMap = {
+    homeless: {
       background: './images/status1.jpg',
       text: 'Разочарование... Что сказать? Вы просто бомж :('
     },
-    {
+    kirkorov: {
       background: './images/status2.jpg',
       text: 'Вы Филипп Киркоров'
     },
-    {
+    shitguy: {
       background: './images/status3.jpg',
       text: 'Вы немножко в теме. Совсем немножко...'
     },
-    {
+    goodguy: {
       background: './images/status4.jpg',
       text: 'Неплохо разбираетесь в теме. Джеймс и Ларс это признают!'
     },
-    {
+    godguy: {
       background: './images/status5.jpg',
       text: 'Вы настоящий HEAVY METAL GOD!'
     }
-     
-   ];
+  }
+
   // Массив с вопросами
-  const data = [
-    {
-      id: 0,
-      background: './images/batman-second-back.jpg'
-    },
+  const questionsData = [
     {
       id: 1,
       question: 'Кто сыграл соло в этой песне Майкла Джексона?',
@@ -1035,166 +1031,177 @@
     
   ];
 
-  const randomValuesArray = [];
-
-  console.log(randomValuesArray);
-  while(randomValuesArray.length < 17) {
-    const randomValue = getRandomIntInclusive(1, 74);
-    if(!randomValuesArray.includes(randomValue)) {
-      randomValuesArray.push(randomValue);
-    }
-  }
-  console.log(randomValuesArray);
-
-  // Выбираем DIV куда через innerHTML будем рендерить экраны
-  const container = document.querySelector('#questionPlaceholder');
-  // Выбираем кнопку на первом экране, которая переходит к 1 вопросу
-  const startButton = document.querySelector('#start');
-  // Выбираем контейнер с кнопками-вариантами ответа
-  const startGameButton = document.querySelector('#start-game');
-  const answerButtons = document.querySelector('#answer_buttons');
-  const answerButtonss = document.querySelectorAll('#answer_buttons button');
-
-  // Функция которая рендерит экран-вопрос. Возвращает строку, подставляя туда question, song, background
-  // ({ question, song, background }) скобочки означают что мы деструктурируем аргументы
-  // На вход приходит объект из массива вопросов, и мы сразу вытаскиваем нужные нам поля
-  const renderQuestionScreenTemplate = ({ question, song, background }) => {
-    return `
-        <div class="screen question" style="background-image: url(${background})">
-          <p class="batman">Хотите узнать как хорошо вы разбираетесь
-           в мире рок музыки? Если да, тогда поехали!</p>
-           <button id="start-game">GO! GO! GO!</button>
-          </div>
-        </div>
-      `
-    //<div class="question-content">
-    //            <p>${question}</p>
-    //<audio controls src="${song}"></audio>
-  };
-
-  const renderStartGameQuestions = ({ question, song, background }) => {
-    return `
-         <div class="render_questions">
-           <div class="screen question" style="background-image: url(${background})"></div>
-           <p>${question}</p>
-           <audio controls src="${song}"></audio>
-         </div>
-          `
-  };
-
-  const renderFinalTab = ({background, text}) => {
-    return `
-     <div class="final_tab"> 
-        <div class="screen question" style="background-image: url(${background})">
-        </div>
-        <p>${text}</p>
-        <p class="final_count">Ответы: ${RightAnswersCounter}/17</p>
-     <div>
-      `
-  }
-
-  const finalResult = function() {
-   if (RightAnswersCounter <= 3) {
-     const result = statusArray[0];
-     container.innerHTML = renderFinalTab(result);
-   }
-
-   if (RightAnswersCounter > 3 && RightAnswersCounter <= 7) {
-     const result1 = statusArray[1];
-     container.innerHTML = renderFinalTab(result1);
-   }
-
-   if (RightAnswersCounter > 7 && RightAnswersCounter <= 11) {
-     const result2 = statusArray[2];
-     container.innerHTML = renderFinalTab(result2);
-   }
-
-   if (RightAnswersCounter > 11 && RightAnswersCounter <= 15) {
-     const result3 = statusArray[3];
-     container.innerHTML = renderFinalTab(result3);
-   }
-
-   if (RightAnswersCounter > 15 && RightAnswersCounter <= 18) {
-     const result4 = statusArray[4];
-     container.innerHTML = renderFinalTab(result4);
-   }
-
-  }
-
-  startButton.addEventListener('click', (event) => {
-    const target = event.target;
-    const startMenu = data[0];
-    container.innerHTML = renderQuestionScreenTemplate(startMenu);
-  });
-
-  //let randomValue = 0;
-
-  function getRandomIntInclusive(min, max) {
+  const getRandomIntInclusive = (min, max) => {
     min = Math.ceil(min);
     max = Math.floor(max);
     return Math.floor(Math.random() * (max - min + 1)) + min;
   }
 
-  function toggleButtons() {
-    console.log(answerButtonss);
-    answerButtonss.forEach(button => button.classList.toggle('hidden'));
-    answerButtonss.forEach(button => button.disabled = false);
+  const getRandomQuestions = (questions, questionsLength) => {
+    const randomValuesArray = [];
+
+    while(randomValuesArray.length < questionsLength) {
+      const randomValue = getRandomIntInclusive(0, questions.length - 1);
+
+      if(!randomValuesArray.includes(randomValue)) {
+        randomValuesArray.push(randomValue);
+      }
+    }
+
+    return randomValuesArray.map(index => questions[index]);
+  }
+
+  const getCorrectAnswersCount = (questions, answers) => {
+    return answers.reduce((correctAnswers, answer, index) => {
+      return questions[index].correctAnswer === answer ? correctAnswers + 1 : correctAnswers;
+    }, 0);
+  }
+
+  const getFinalResultStatus = (result, totalQuestions) => {
+    let statusKey = '';
+    const correctPercent = result / totalQuestions * 100;
+
+    if (correctPercent <= 25) {
+      statusKey = 'homeless';
+    } else if (correctPercent > 25 && correctPercent <= 50) {
+      statusKey = 'kirkorov';
+    } else if (correctPercent > 50 && correctPercent <= 75) {
+      statusKey = 'shitguy';
+    } else if (correctPercent > 75 && correctPercent <= 90) {
+      statusKey = 'goodguy';
+    } else if (correctPercent > 90 && correctPercent <= 100) {
+      statusKey = 'godguy';
+    }
+
+    return statusHashMap[statusKey];
+  }
+
+  // start => batman => game => result
+  let screen = 'start';
+  let answeredQuestionCounter = 0;
+  let questions = getRandomQuestions(questionsData, 15);
+  let answers = [];
+
+  // Выбираем DIV куда через innerHTML будем рендерить экраны
+  const container = document.querySelector('#questionPlaceholder');
+  const answerButtons = document.querySelector('#answer_buttons');
+
+  const renderBatmanScreen = () => {
+    return `
+      <div class="screen question" style="background-image: url(./images/batman-second-back.jpg)">
+        <p class="batman">Хотите узнать как хорошо вы разбираетесь
+          в мире рок музыки? Если да, тогда поехали!</p>
+          <button id="start-game">GO! GO! GO!</button>
+        </div>
+      </div>
+    `
+  };
+
+  const renderGameQuestion = (question, currentQuestion, totalQuestions) => {
+    const { question: questionText, song, background } = question;
+
+    return `
+      <div class="render_questions">
+        <div class="screen question" style="background-image: url(${background})">
+          <div class="counter">${currentQuestion}/${totalQuestions}</div>
+        </div>
+        <p>${questionText}</p>
+        <audio controls src="${song}"></audio>
+      </div>
+    `
+  };
+
+  const renderFinalTab = (status, correctAnswers, totalQuestions) => {
+    return `
+      <div class="final_tab"> 
+        <div class="screen question" style="background-image: url(${status.background})">
+        </div>
+        <p>${status.text}</p>
+        <p class="final_count">Ответы: ${correctAnswers}/${totalQuestions}</p>
+      <div>
+    `
+  }
+
+  // в функцию передается объект question из массива questions
+  const renderAnswerButtons = ({ answers }) => {
+    const { a, b, c, d } = answers;
+
+    return `
+      <button data-answer="a">${a}</button>
+      <button data-answer="b">${b}</button>
+      <button data-answer="c">${c}</button>
+      <button data-answer="d">${d}</button>
+    `
+  }
+
+  const resetGame = () => {
+    questions = [];
+    answers = [];
+    answeredQuestionCounter = 0;
+    screen = 'batman';
+
+    container.innerHTML = renderBatmanScreen();
+    answerButtons.innerHTML = '';
   }
 
   container.addEventListener('click', (event) => {
-  if (event.target.id === 'start-game') {
-    toggleButtons();
-    answerButtonss[0].innerHTML = data[randomValuesArray[0]].answers.a;
-    answerButtonss[1].innerHTML = data[randomValuesArray[0]].answers.b;
-    answerButtonss[2].innerHTML = data[randomValuesArray[0]].answers.c;
-    answerButtonss[3].innerHTML = data[randomValuesArray[0]].answers.d;
+    if (event.target.id === 'start') {
+      screen = 'batman';
+      container.innerHTML = renderBatmanScreen();
+    }
 
-    container.innerHTML = renderStartGameQuestions(data[randomValuesArray[0]]);
-  }
+    if (event.target.id === 'start-game') {
+      screen = 'game';
+
+      let questionsCount = prompt('Выберите количество вопросов от 5 до 74', 15);
+
+      // проверки если ввелси строку вместо числа или ввели меньше 5 и больше 74
+      if(isNaN(parseInt(questionsCount)) || questionsCount < 5 || questionsCount > 74) {
+        questionsCount = 17;
+      }
+
+      questions = getRandomQuestions(questionsData, questionsCount);
+
+      const firstQuestion = questions[0];
+
+      container.innerHTML = renderGameQuestion(firstQuestion, 1, questions.length);
+      answerButtons.innerHTML = renderAnswerButtons(firstQuestion);
+    }
   });
-
-  let i = 0;
-  let RightAnswersCounter = 0;
-  let WrongAnswersCounter = 0;
 
   answerButtons.addEventListener('click', (event) => {
-    // если кликнули не по кнопке, то делаем ретерн
-    console.log(event.target)
-    if(event.target.tagName !== 'BUTTON') return;
-    // если if выше выполнился, все что ниже не будет выполняться
-
     const target = event.target;
 
-    if (target.id === 'playAgain') {
-      window.location.reload();
-    }
-    const questionId = target.dataset.question;
-    const currentQuestion = data[randomValuesArray[i]];
-    const currentAnswer = data[randomValuesArray[i]];
+    if(event.target.tagName !== 'BUTTON') return;
 
-    if (questionId === currentAnswer.correctAnswer) {
-      RightAnswersCounter++;
-    } else {
-      WrongAnswersCounter++;
+    if(event.target.id === 'playAgain' && screen === 'result') {
+      resetGame();
+      return;
     }
-    console.log(RightAnswersCounter);
-    console.log(WrongAnswersCounter);
-    i++;
-    console.log(i + 'raz');
-    if (i === 17) {
-      toggleButtons();
-       finalResult();
-       answerButtons.innerHTML = `<button id="playAgain"'>Играть заново!</button>`;
-    }  else {
-    answerButtonss[0].innerHTML = data[randomValuesArray[i]].answers.a;
-    answerButtonss[1].innerHTML = data[randomValuesArray[i]].answers.b;
-    answerButtonss[2].innerHTML = data[randomValuesArray[i]].answers.c;
-    answerButtonss[3].innerHTML = data[randomValuesArray[i]].answers.d;
-    container.innerHTML = renderStartGameQuestions(data[randomValuesArray[i]]);
+
+    const currentAnswer = target.dataset.answer;
+    answers.push(currentAnswer);
+
+    // Код в этом ифе выполняется, пока у нас есть вопросы в массиве
+    if(questions[answeredQuestionCounter + 1]) {
+      const nextQuestion = questions[answeredQuestionCounter + 1];
+
+      container.innerHTML = renderGameQuestion(nextQuestion, answers.length + 1, questions.length);
+      answerButtons.innerHTML = renderAnswerButtons(nextQuestion);
+
+      answeredQuestionCounter++;
+
+      return;
     }
-    
+
+    screen = 'result'
+
+    const rating = getCorrectAnswersCount(questions, answers);
+    const status = getFinalResultStatus(rating, questions.length);
+
+    container.innerHTML = renderFinalTab(status, rating, questions.length);
+    answerButtons.innerHTML = `<button id="playAgain"'>Играть заново!</button>`;
   });
-  
 
 </script>
 
