@@ -33,6 +33,9 @@
       <button class="hidden" data-question="d">Показать 4 вопрос</button>
     </div>
   </div>
+  <div class="hack-popup">
+    <button id="hack">CALL METAL GOD!!!</button>
+  </div>
 </body>
 
 <script>
@@ -168,7 +171,7 @@
         c: 'Matrix',
         d: 'Terminator 3',
       },
-      correctAnswer: 'с'
+      correctAnswer: 'c'
     },
     {
       id: 9,
@@ -415,7 +418,7 @@
         c: 'Eurythmics',
         d: 'Ministry',
       },
-      correctAnswer: 'с'
+      correctAnswer: 'c'
     },
     {
     id: 28,
@@ -1052,7 +1055,14 @@
   }
 
   const getCorrectAnswersCount = (questions, answers) => {
+    console.log(questions, 'questions');
+    console.log(answers, 'answers');
+    
     return answers.reduce((correctAnswers, answer, index) => {
+      if(questions[index].correctAnswer !== answer) {
+        console.log(questions[index], answer);
+      }
+
       return questions[index].correctAnswer === answer ? correctAnswers + 1 : correctAnswers;
     }, 0);
   }
@@ -1082,6 +1092,7 @@
   let questions = getRandomQuestions(questionsData, 15);
   let answers = [];
 
+  const body = document.querySelector('body');
   // Выбираем DIV куда через innerHTML будем рендерить экраны
   const container = document.querySelector('#questionPlaceholder');
   const answerButtons = document.querySelector('#answer_buttons');
@@ -1201,6 +1212,82 @@
 
     container.innerHTML = renderFinalTab(status, rating, questions.length);
     answerButtons.innerHTML = `<button id="playAgain"'>Играть заново!</button>`;
+  });
+
+  // КОД НИЖЕ ДЛЯ ФИШЕК С ХАКОМ
+  // выбираем кнопку, по клику на которую начинается автоматическое прохождение
+  const hackButton = document.getElementById('hack');
+
+  // флаг, который нужен чтобы интервал работал до того момента пока есть вопрос на экране
+  let isHackEnabled = false;
+
+  hackButton.addEventListener('click', () => {
+    if(screen !== 'game' || isHackEnabled) return;
+
+    // Убираем класс у попапа и добавляем класс к body
+    // Класс нужен чтобы анимировать компоненты во время действия хака
+    body.classList.add('hacked');
+    body.classList.remove('hack-popup-active');
+
+    // создаем невидимый аудио тег, добавляем его в боди, и включаем музон
+    const hackAudio = document.createElement('audio');
+          hackAudio.src = './audio/bonus_track.mp3';
+          hackAudio.id = 'hack-audio';
+          hackAudio.style.display = 'hidden';
+
+    body.append(hackAudio);
+    hackAudio.play();
+
+    // указываем, что хакинг начался
+    isHackEnabled = true;
+
+    let hackInterval = setInterval(() => {
+      // выбираем рандомный фон для боди
+      const randomBgId = getRandomIntInclusive(1, 6);
+      body.background = `./images/bonus_${randomBgId}.jpg`;
+
+      // выбираем текущий вопрос и аудио, ищем правильный ответ
+      const currentQuestionText = document.querySelector('.render_questions p') && document.querySelector('.render_questions p').innerText;
+      const currentQuestionAudio = document.querySelector('audio') &&  document.querySelector('audio').src;
+
+      // если вопроса нет, то выключаем интервал
+      if(!currentQuestionText){
+        clearInterval(hackInterval);
+        isHackEnabled = false;
+
+        // убираем фон, класс, удаляем аудио тег невидимый
+        body.classList.remove('hacked');
+        document.querySelector('#hack-audio').remove();
+        body.background = '';
+      }
+
+      // ищем ответ
+      const answer = questionsData
+        .find(item => item.question === currentQuestionText && currentQuestionAudio.includes(item.song.replace('.', '')))
+        .correctAnswer;
+
+      const answerButton = document.querySelector(`button[data-answer=${answer}]`);
+
+      // Кликаем по кнопке с ответом
+      answerButton.click();
+    }, 1000);
+  });
+
+  const clickedKeys = [];
+
+  // если последние 4 кликнутых клавиши образуют слово hack показываем попап с предложением читануть
+  document.addEventListener('keydown', event => {
+    const charList = 'abcdefghijklmnopqrstuvwxyz0123456789';
+
+    if (charList.indexOf(key) === -1) return;
+    clickedKeys.push(key);
+
+    const lastFourPressedKeys = clickedKeys.slice(clickedKeys.length - 4);
+    const isHackWordPressed = lastFourPressedKeys.join('').toLowerCase() === 'hack';
+
+    if(isHackWordPressed){
+      body.classList.add('hack-popup-active');
+    }
   });
 
 </script>
