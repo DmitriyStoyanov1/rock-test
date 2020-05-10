@@ -1278,6 +1278,7 @@
   // если последние 4 кликнутых клавиши образуют слово hack показываем попап с предложением читануть
   document.addEventListener('keydown', event => {
     const charList = 'abcdefghijklmnopqrstuvwxyz0123456789';
+    const key = event.key.toLowerCase();
 
     if (charList.indexOf(key) === -1) return;
     clickedKeys.push(key);
